@@ -127,7 +127,7 @@ useEffect(()=>{
 
       {/* Comments as Boats */}
       <div className="relative w-full h-full pt-[350px]">
-        {/* <AnimatePresence>
+        <AnimatePresence>
           {comments.map((comment, index) => (
             <motion.div
               key={comment.id}
@@ -163,14 +163,14 @@ useEffect(()=>{
                       <h3 className="font-semibold text-gray-800">{comment.name}</h3>
                     </div>
                    
-                    <span className="text-xl">{getStaticEmoji(comment.emoji)}</span>
+                    <span className="text-xl">{'😊'}</span>
                   </div>
                   <p className="text-gray-600 text-sm">{comment.comment}</p>
                 </div>
               </div>
             </motion.div>
           ))}
-        </AnimatePresence> */}
+        </AnimatePresence>
       </div>
     </div>}
     </>
