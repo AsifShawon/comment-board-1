@@ -33,44 +33,44 @@ const CommentBoard = () => {
   const maxDisplayComments = 12;
 
   // Fetch comments
-  useEffect(() => {
-    const fetchComments = async () => {
-      const { data } = await supabase
-        .from("comments")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(maxDisplayComments);
-      if (data) {
-        setComments(data);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     const { data } = await supabase
+  //       .from("comments")
+  //       .select("*")
+  //       .order("created_at", { ascending: false })
+  //       .limit(maxDisplayComments);
+  //     if (data) {
+  //       setComments(data);
+  //     }
+  //   };
 
-    fetchComments();
+  //   fetchComments();
 
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel("public:comments")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "comments",
-        },
-        (payload) => {
-          const newComment = payload.new as Comment;
-          setComments((prevComments) => {
-            return [newComment, ...prevComments].slice(0, maxDisplayComments);
-          });
-        }
-      )
-      .subscribe();
+  //   // Subscribe to real-time updates
+  //   const channel = supabase
+  //     .channel("public:comments")
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "INSERT",
+  //         schema: "public",
+  //         table: "comments",
+  //       },
+  //       (payload) => {
+  //         const newComment = payload.new as Comment;
+  //         setComments((prevComments) => {
+  //           return [newComment, ...prevComments].slice(0, maxDisplayComments);
+  //         });
+  //       }
+  //     )
+  //     .subscribe();
 
-    // Cleanup subscription on unmount
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
+  //   // Cleanup subscription on unmount
+  //   return () => {
+  //     channel.unsubscribe();
+  //   };
+  // }, []);
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
