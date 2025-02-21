@@ -1,5 +1,5 @@
 import CommentBoard  from '@/components/comment-board';
-import { QRCodeDisplay } from '@/components/qr-code-display';
+import { QRCodeDisplay } from '@/app/components/qr-code-display';
 
 export default function Home() {
   return (
