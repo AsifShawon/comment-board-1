@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import Lottie from "lottie-react";
@@ -28,56 +27,25 @@ const getStaticEmoji = (rating: number) => {
   return emojiMap[rating] || "😐";
 };
 
-// Preload all possible emoji animations
-const preloadEmojiAnimations = async () => {
-  if (typeof document === "undefined") return {}; // Ensure this runs only on the client side
-
-  const emojiMap = {
-    5: "https://fonts.gstatic.com/s/e/notoemoji/latest/1f603/lottie.json",
-    4: "https://fonts.gstatic.com/s/e/notoemoji/latest/1f642/lottie.json",
-    3: "https://fonts.gstatic.com/s/e/notoemoji/latest/1f610/lottie.json",
-    2: "https://fonts.gstatic.com/s/e/notoemoji/latest/1f641/lottie.json",
-    1: "https://fonts.gstatic.com/s/e/notoemoji/latest/1f61e/lottie.json",
-  };
-  const animations: Record<string, any> = {};
-  await Promise.all(
-    Object.entries(emojiMap).map(async ([rating, url]) => {
-      try {
-        const response = await fetch(url);
-        animations[rating] = await response.json();
-      } catch (error) {
-        console.error(`Failed to fetch animation for rating ${rating}:`, error);
-      }
-    })
-  );
-  return animations;
-};
-
 // Main Comment Board Component
-const CommentBoardClient = () => {
+const CommentBoard = () => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [emojiAnimations, setEmojiAnimations] = useState<Record<string, any>>({});
   const maxDisplayComments = 12;
 
-  // Fetch comments and preload emoji animations
+  // Fetch comments
   useEffect(() => {
-    const fetchCommentsAndEmojis = async () => {
+    const fetchComments = async () => {
       const { data } = await supabase
         .from("comments")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(maxDisplayComments);
-
       if (data) {
         setComments(data);
-
-        // Preload emoji animations
-        const preloadedAnimations = await preloadEmojiAnimations();
-        setEmojiAnimations(preloadedAnimations);
       }
     };
 
-    fetchCommentsAndEmojis();
+    fetchComments();
 
     // Subscribe to real-time updates
     const channel = supabase
@@ -115,7 +83,7 @@ const CommentBoardClient = () => {
       {/* Ocean */}
       <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-b from-teal-400 to-blue-900">
         {/* Reflections */}
-        <div className="absolute inset-0 opacity-30">
+        {/* <div className="absolute inset-0 opacity-30" suppressHydrationWarning={true}>
           {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
@@ -128,7 +96,7 @@ const CommentBoardClient = () => {
               }}
             />
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Wave SVG */}
@@ -178,16 +146,8 @@ const CommentBoardClient = () => {
                       <MessageCircle className="w-4 h-4 text-blue-500" />
                       <h3 className="font-semibold text-gray-800">{comment.name}</h3>
                     </div>
-                    {emojiAnimations[comment.emoji] ? (
-                      <Lottie
-                        animationData={emojiAnimations[comment.emoji]}
-                        style={{ width: 32, height: 32 }}
-                        loop
-                        autoplay
-                      />
-                    ) : (
-                      <span className="text-xl">{getStaticEmoji(comment.emoji)}</span>
-                    )}
+                    {/* Static Emoji */}
+                    <span className="text-xl">{getStaticEmoji(comment.emoji)}</span>
                   </div>
                   <p className="text-gray-600 text-sm">{comment.comment}</p>
                 </div>
@@ -199,10 +159,5 @@ const CommentBoardClient = () => {
     </div>
   );
 };
-
-// Export a dynamic component with SSR disabled
-export const CommentBoard = dynamic(() => Promise.resolve(CommentBoardClient), {
-  ssr: false,
-});
 
 export default CommentBoard;
