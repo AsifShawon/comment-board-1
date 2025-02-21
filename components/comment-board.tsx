@@ -30,22 +30,36 @@ const getStaticEmoji = (rating: number) => {
 // Main Comment Board Component
 const CommentBoard = () => {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading,setIsLoading] = useState(false)
   const maxDisplayComments = 12;
 
   // Fetch comments
-  useEffect(() => {
-    const fetchComments = async () => {
-      const { data } = await supabase
-        .from("comments")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(maxDisplayComments);
-      if (data) {
-        setComments(data);
-      }
-    };
 
-    fetchComments();
+useEffect(()=>{
+  const fetchComments = async () => {
+    try{
+      setIsLoading(true)
+      const { data } = await supabase
+      .from("comments")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(maxDisplayComments);
+    if (data) {
+      setComments(data);
+    }
+    }catch(err){
+      console.log(err)
+    }finally{
+      setIsLoading(false)
+    }
+    
+  };
+
+  fetchComments();
+},[])
+
+  useEffect(() => {
+    
 
     // Subscribe to real-time updates
     const channel = supabase
@@ -73,7 +87,10 @@ const CommentBoard = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <>
+    {isLoading? 
+    <p>Loading...</p>
+    :<div className="relative w-full h-screen overflow-hidden">
       {/* Sunset Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-orange-400 via-red-500 to-purple-900" />
 
@@ -156,7 +173,8 @@ const CommentBoard = () => {
           ))}
         </AnimatePresence>
       </div>
-    </div>
+    </div>}
+    </>
   );
 };
 
