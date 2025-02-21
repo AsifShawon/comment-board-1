@@ -58,33 +58,33 @@ useEffect(()=>{
   fetchComments();
 },[])
 
-  useEffect(() => {
+  // useEffect(() => {
     
 
-    // Subscribe to real-time updates
-    const channel = supabase
-      .channel("public:comments")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "comments",
-        },
-        (payload) => {
-          const newComment = payload.new as Comment;
-          setComments((prevComments) => {
-            return [newComment, ...prevComments].slice(0, maxDisplayComments);
-          });
-        }
-      )
-      .subscribe();
+  //   // Subscribe to real-time updates
+  //   const channel = supabase
+  //     .channel("public:comments")
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "INSERT",
+  //         schema: "public",
+  //         table: "comments",
+  //       },
+  //       (payload) => {
+  //         const newComment = payload.new as Comment;
+  //         setComments((prevComments) => {
+  //           return [newComment, ...prevComments].slice(0, maxDisplayComments);
+  //         });
+  //       }
+  //     )
+  //     .subscribe();
 
-    // Cleanup subscription on unmount
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
+  //   // Cleanup subscription on unmount
+  //   return () => {
+  //     channel.unsubscribe();
+  //   };
+  // }, []);
 
   return (
     <>
