@@ -45,6 +45,7 @@ useEffect(()=>{
       .order("created_at", { ascending: false })
       .limit(maxDisplayComments);
     if (data) {
+      console.log(data)
       setComments(data);
     }
     }catch(err){
