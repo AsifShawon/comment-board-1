@@ -5,6 +5,8 @@ import QRCode from "qrcode";
 import { Card, CardContent } from "@/components/ui/card";
 import { QrCode } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function QRCodeDisplay() {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
@@ -35,14 +37,19 @@ export function QRCodeDisplay() {
             <Image
               src={qrCodeUrl}
               alt="QR Code"
-              width={48}
-              height={48}
-              className="w-96 h-96"
+              width={68}
+              height={68}
+              className="w-[450px] h-[450px]"
             />
           ) : (
             <p>Loading QR Code...</p>
           )}
         </div>
+        <Link href="/comment">
+          <p className="text-center mt-2 text-blue-500 dark:text-blue-300 underline">
+          https://comment-board.vercel.app/comment
+          </p>
+        </Link>
       </CardContent>
     </Card>
   );
