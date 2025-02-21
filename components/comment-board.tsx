@@ -2,9 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 import boatAnimation from "@/components/boat.json";
 import { supabase } from "@/lib/supabase";
+import dynamic from "next/dynamic";
+
+// Dynamically import Lottie with SSR disabled
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 // Define the Comment interface
 interface Comment {
@@ -151,7 +155,7 @@ useEffect(()=>{
                   <Lottie
                     animationData={boatAnimation}
                     loop
-                    
+                    autoplay
                     style={{ width: "100%", height: "100%" }}
                   />
                 </div>
